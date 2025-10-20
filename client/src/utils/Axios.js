@@ -1,15 +1,15 @@
 import axios from "axios";
-import SummaryApi, { baseURL } from "../common/SummaryApi";
+import SummaryApi from "../common/SummaryApi";
 
 const Axios = axios.create({
-  baseURL: baseURL,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
 //access token sending in header
 
 Axios.interceptors.request.use(
-  async (config) => {
+  (config) => {
     const accessToken = localStorage.getItem("accesstoken");
 
     if (accessToken) {

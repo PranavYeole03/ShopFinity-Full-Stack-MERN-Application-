@@ -1,0 +1,117 @@
+import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import Axios from "../utils/Axios.js";
+import SummaryApi from "../common/SummaryApi.jsx";
+import AxiosToastError from "../utils/AxiosToastError.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+const OtpVerification = () => {
+  const [data, setData] = useState(["", "", "", "", "", ""]);
+  const navigate = useNavigate();
+  const inputRef = useRef([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location?.state?.email) navigate("/forgot-password");
+  }, []);
+
+  const validValue = data.every((el) => el);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios({
+        ...SummaryApi.verifyForgotPasswordOtp,
+        data: {
+          otp: data.join(""),
+          email: location?.state?.email,
+        },
+      });
+
+      if (response.data.error) {
+        toast.error(response.data.message);
+      }
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setData(["", "", "", "", "", ""]);
+        navigate("/reset-password", {
+          state: {
+            data: response.data,
+            email: location?.state?.email,
+          },
+        });
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
+
+  return (
+    <section className="w-full container mx-auto px-2">
+      <div className="bg-white my-4 w-full max-w-lg mx-auto rounded p-7">
+        <p className="font-semibold text-lg mb-2 text-center">Enter OTP</p>
+        <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
+          {/* OTP */}
+          <div className="grid gap-1">
+            <label htmlFor="otp">Enter Your OTP:</label>
+
+            <div className="flex items-center gap-2 justify-between mt-2">
+              {data.map((element, index) => {
+                return (
+                  <input
+                    key={"otp" + index}
+                    type="text"
+                    id="otp"
+                    ref={(ref) => {
+                      inputRef.current[index] = ref;
+                      return ref;
+                    }}
+                    value={data[index]}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      const newData = [...data];
+                      newData[index] = value;
+                      setData(newData);
+
+                      if (value && index < 5) {
+                        inputRef.current[index + 1].focus();
+                      }
+                      if (!value && index > 0) {
+                        inputRef.current[index - 1].focus();
+                      }
+                    }}
+                    maxLength={1}
+                    className="bg-blue-50 w-full max-w-16 p-2 border rounded outline-none focus:border-red-600 text-center font-semibold"
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Submit */}
+          <button
+            disabled={!validValue}
+            className={`${
+              validValue ? "bg-green-800 hover:bg-green-700 " : "bg-gray-400"
+            }  text-white py-2 rounded font-semibold my-3 tracking-wide `}
+          >
+            Verify OTP
+          </button>
+        </form>
+        <p>
+          Already have account ?{" "}
+          <Link
+            to={"/login"}
+            className="font-semibold text-sky-500 hover:text-yellow-400"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
+    </section>
+  );
+};
+
+export default OtpVerification;

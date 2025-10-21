@@ -6,13 +6,12 @@ import router from "./route/index.jsx";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 
-// ✅ Load your Clerk publishable key from .env.local
 
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  //<StrictMode>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
-  </StrictMode>
+  //</StrictMode>
 );

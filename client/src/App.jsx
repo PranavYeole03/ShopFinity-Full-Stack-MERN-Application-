@@ -3,11 +3,10 @@ import "./App.css";
 import "./index.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
-import { setUserDetails } from "./store/userSlice";
-import fetchUserDetails from "./utils/fetchUserDetails";
 import { useDispatch } from "react-redux";
+import { setUserDetails } from "./store/userSlice";
 import {
   setAllCategory,
   setAllSubCategory,
@@ -22,38 +21,41 @@ function App() {
   const dispatch = useDispatch();
   const location = useLocation();
 
+  // Fetch user details (requires access token)
   const fetchUser = async () => {
-    const userData = await fetchUserDetails();
-    dispatch(setUserDetails(userData.data));
+    try {
+      const response = await Axios.get(SummaryApi.userDetails.url);
+      dispatch(setUserDetails(response.data.data));
+    } catch (error) {
+      console.error("Error fetching user details:", error.response || error);
+    }
   };
 
+  // Fetch categories
   const fetchCategory = async () => {
     try {
       dispatch(setLoadingCategory(true));
-      const response = await Axios({
-        ...SummaryApi.getCategory,
-      });
-      const { data: responseData } = response;
-      if (responseData.success) {
-        dispatch(setAllCategory(responseData.data));
+      const response = await Axios.get(SummaryApi.getCategory.url);
+      if (response.data.success) {
+        dispatch(setAllCategory(response.data.data));
       }
     } catch (error) {
+      console.error("Error fetching categories:", error.response || error);
     } finally {
       dispatch(setLoadingCategory(false));
     }
   };
 
+  // Fetch subcategories
   const fetchSubCategory = async () => {
     try {
-      const response = await Axios({
-        ...SummaryApi.getSubCategory,
-      });
-      const { data: responseData } = response;
-      if (responseData.success) {
-        dispatch(setAllSubCategory(responseData.data));
+      // Subcategory API expects POST, send empty object if needed
+      const response = await Axios.post(SummaryApi.getSubCategory.url, {});
+      if (response.data.success) {
+        dispatch(setAllSubCategory(response.data.data));
       }
     } catch (error) {
-    } finally {
+      console.error("Error fetching subcategories:", error.response || error);
     }
   };
 
@@ -61,7 +63,6 @@ function App() {
     fetchUser();
     fetchCategory();
     fetchSubCategory();
-    //fetchCartItem();
   }, []);
 
   return (

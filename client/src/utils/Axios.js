@@ -6,45 +6,34 @@ const Axios = axios.create({
   withCredentials: true,
 });
 
-//access token sending in header
-
+// Request interceptor: attach access token
 Axios.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem("accesstoken");
-
+    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-//extend the life span of access token with help of refresh token
-
-Axios.interceptors.request.use(
-  (response) => {
-    return response;
-  },
+// Response interceptor: handle 401 and refresh token
+Axios.interceptors.response.use(
+  (response) => response,
   async (error) => {
-    let originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest.retry) {
-      originalRequest.retry = true;
-
-      const refreshToken = localStorage.getItem("refreshtoken");
-
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
         const newAccessToken = await refreshAccessToken(refreshToken);
-
         if (newAccessToken) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return Axios(originalRequest);
         }
       }
     }
-
     return Promise.reject(error);
   }
 );
@@ -53,16 +42,14 @@ const refreshAccessToken = async (refreshToken) => {
   try {
     const response = await Axios({
       ...SummaryApi.RefreshToken,
-      headers: {
-        Authorization: `Bearer ${refreshToken}`,
-      },
+      headers: { Authorization: `Bearer ${refreshToken}` },
     });
     const accessToken = response.data.data.accessToken;
     localStorage.setItem("accessToken", accessToken);
-
     return accessToken;
   } catch (error) {
-    console.log(error);
+    console.error("Refresh token failed:", error.response || error);
+    return null;
   }
 };
 

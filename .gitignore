@@ -29,4 +29,4 @@ client/node_modules
 server/node_modules
 .env
 .client/.env
-.server/.env
+.server/.env-e "\n.env\nclient/.env\nserver/.env" 

@@ -4,12 +4,11 @@ import Axios from "../utils/Axios";
 import AxiosToastError from "../utils/AxiosToastError";
 import SummaryApi from "../common/SummaryApi";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { DisplayPrice } from "../utils/DisplayPrice";
 import Divider from "../components/Divider";
 import image1 from "../assets/minute_delivery.png";
 import image2 from "../assets/Best_Prices_Offers.png";
 import image3 from "../assets/Wide_Assortment.png";
-import { DisplayPriceInRupees } from "../../../../../../Downloads/BlinkIt-Clone-Full-Stack-Ecommerce-main/BlinkIt-Clone-Full-Stack-Ecommerce-main/client/src/utils/DisplayPriceInRupees";
+import { DisplayPrice } from "../utils/DisplayPrice.js";
 import { PriceWithDiscount } from "../utils/PriceWithDiscount";
 import AddToCartButton from "../components/AddToCartButton";
 
@@ -145,7 +144,7 @@ const ProductDisplay = () => {
           <div className="flex items-center gap-2 lg:gap-4 ">
             <div className="border border-green-600 px-4 py-2 rounded bg-green-50 w-fit lg:hover:bg-green-200">
               <p className="font-semibold text-lg lg:text-xl">
-                {DisplayPriceInRupees(
+                {DisplayPrice(
                   PriceWithDiscount(data.price, data.discount)
                 )}
               </p>

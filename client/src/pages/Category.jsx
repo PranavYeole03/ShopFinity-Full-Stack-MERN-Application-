@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UploadCategoryModel from "../components/uploadCategoryModel";
+import UploadCategoryModel from "../components/uploadCategoryModel.jsx";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
 import NoData from "../components/NoData";

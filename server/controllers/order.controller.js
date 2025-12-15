@@ -2,7 +2,7 @@ import cartProductModel from "../models/cartproduct.model.js";
 import orderModel from "../models/order.model.js";
 import UserModel from "../models/user.model.js";
 import mongoose from "mongoose";
-import Stripe from "../config/stripe.js";
+//import Stripe from "../config/stripe.js";
 
 export async function CashOnDeliveryController(request, response) {
   try {

@@ -8,7 +8,7 @@ import Divider from "../components/Divider";
 import image1 from "../assets/minute_delivery.png";
 import image2 from "../assets/Best_Prices_Offers.png";
 import image3 from "../assets/Wide_Assortment.png";
-import { DisplayPrice } from "../utils/DisplayPrice.js";
+import { DisplayPrice } from "../utils/DisplayPrice";
 import { PriceWithDiscount } from "../utils/PriceWithDiscount";
 import AddToCartButton from "../components/AddToCartButton";
 
@@ -150,7 +150,7 @@ const ProductDisplay = () => {
               </p>
             </div>
             {data.discount > 0 && (
-              <p className="line-through">{DisplayPriceInRupees(data.price)}</p>
+              <p className="line-through">{DisplayPrice(data.price)}</p>
             )}
             {data.discount > 0 && (
               <p className="font-bold text-green-600 lg:text-2xl">

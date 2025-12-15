@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import UploadCategoryModal from "../components/uploadCategoryModal";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
 import NoData from "../components/NoData";
@@ -9,6 +8,7 @@ import EditCategory from "../components/EditCategory";
 import ConfirmBox from "../components/ConfirmBox";
 import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
+import UploadCategoryModal from "../components/UploadCategoryModal";
 import { useSelector } from "react-redux";
 
 const Category = () => {

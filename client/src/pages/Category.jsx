@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UploadCategoryModel from "../components/uploadCategoryModel.jsx";
+import UploadCategoryModal from "../components/uploadCategoryModal.jsx";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
 import NoData from "../components/NoData";
@@ -116,7 +116,7 @@ const Category = () => {
       {loading && <Loading />}
 
       {openUploadCategory && (
-        <UploadCategoryModel
+        <UploadCategoryModal
           fetchData={fetchCategory}
           close={() => setOpenUploadCategory(false)}
         />

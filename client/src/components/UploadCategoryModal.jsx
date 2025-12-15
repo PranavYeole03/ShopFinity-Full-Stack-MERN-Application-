@@ -6,7 +6,7 @@ import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 
-const UploadCategoryModel = ({ close,fetchData }) => {
+const UploadCategoryModal = ({ close,fetchData }) => {
   const [data, setData] = useState({
     name: "",
     image: "",
@@ -141,4 +141,4 @@ const UploadCategoryModel = ({ close,fetchData }) => {
   );
 };
 
-export default UploadCategoryModel;
+export default UploadCategoryModal;

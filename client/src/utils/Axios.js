@@ -2,7 +2,7 @@ import axios from "axios";
 import SummaryApi from "../common/SummaryApi";
 
 const Axios = axios.create({
-  baseURL: "https://shopfinity-full-stack-mern-application-cwxr.onrender.com",
+  baseURL: "https://shopfinity-full-stack-mern-application-5.onrender.com",
   withCredentials: true,
 });
 

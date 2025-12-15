@@ -1,4 +1,4 @@
-export const baseURL = "https://shopfinity-full-stack-mern-application-cwxr.onrender.com";
+export const baseURL = "https://shopfinity-full-stack-mern-application-5.onrender.com";
 
 const SummaryApi = {
   register: {

@@ -58,7 +58,7 @@ const Header = () => {
   // }, [cartItem]);
 
   return (
-    <header className=" h-24 lg:h-20 lg:shadow-md sticky top-0 z-40 flex  flex-col justify-center gap-1 bg-white">
+    <header className=" h-22 lg:h-22 lg:shadow-md sticky top-0 z-40 flex  flex-col justify-center gap-1 bg-white">
       {!(isSearchPage && isMobile) && (
         <div className="container mx-auto flex items-center px-2 justify-between">
           {/* LOGO */}
@@ -128,7 +128,7 @@ const Header = () => {
                 </button>
               )}
 
-              <button onClick={()=>setOpenCartSection(true)} className="flex items-center gap-2 bg-blue-500 hover:bg-green-600 px-3 py-2 rounded text-white">
+              <button onClick={()=>setOpenCartSection(true)} className="flex items-center gap-2 bg-green-400 hover:bg-green-600 px-3 py-2 rounded text-white">
                 <div className="animate-pulse">
                   <FaShoppingCart size={26} />
                 </div>

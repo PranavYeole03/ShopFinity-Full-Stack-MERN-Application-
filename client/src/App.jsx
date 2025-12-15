@@ -16,6 +16,7 @@ import Axios from "./utils/Axios";
 import SummaryApi from "./common/SummaryApi";
 import GlobalProvider from "./provider/GlobalProvider";
 import CartMobile from "./components/CartMobile";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ function App() {
 
   return (
     <GlobalProvider>
+      <Chatbot />
       <Header />
       <main className="min-h-[78vh]">
         <Outlet />

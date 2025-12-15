@@ -63,8 +63,8 @@ const DisplayCartItem = ({ close }) => {
                 </div>
               ) : (
                 <>
-                  <div className="bg-slate-200 flex items-center justify-between">
-                    <p className="font-medium animate-pulse hover:text-shadow-black cursor-auto">
+                  <div className="bg-green-200 flex items-center justify-between">
+                    <p className="font-medium animate-pulse  cursor-auto">
                       Shop for more than {DisplayPrice(1000)} to free delivery
                     </p>
                   </div>

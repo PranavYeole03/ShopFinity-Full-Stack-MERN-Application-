@@ -33,7 +33,7 @@ const AddToCartButton = ({ data }) => {
       const { data: responseData } = response;
 
       if (responseData.success) {
-        toast.success(responseData.message);
+        //toast.success(responseData.message);
         if (fetchCartItem) {
           fetchCartItem();
         }
@@ -64,7 +64,7 @@ const AddToCartButton = ({ data }) => {
     const response = await updateCartItem(cartItemDetails?._id, qty + 1);
 
     if (response.success) {
-      toast.success("Item added");
+      //toast.success("Item added");
     }
   };
 
@@ -77,7 +77,7 @@ const AddToCartButton = ({ data }) => {
       const response = await updateCartItem(cartItemDetails?._id, qty - 1);
 
       if (response.success) {
-        toast.success("Item remove");
+        //toast.success("Item remove");
       }
     }
   };

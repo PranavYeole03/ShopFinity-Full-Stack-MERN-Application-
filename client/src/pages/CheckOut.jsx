@@ -9,7 +9,6 @@ import SummaryApi from "../common/SummaryApi";
 import toast from "react-hot-toast";
 import Axios from "../utils/Axios";
 import { useNavigate } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
 
 const CheckOut = () => {
   const { NotDiscountTotalPrice, totalPrice, totalQty, fetchCartItem, fetchOrder } =
@@ -93,8 +92,8 @@ const CheckOut = () => {
   }
 
   try {
-    const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-    const stripe = await loadStripe(stripePublicKey);
+    // const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+    // const stripe = await loadStripe(stripePublicKey);
 
     const response = await Axios({
       ...SummaryApi.payment_url,
@@ -115,7 +114,7 @@ const CheckOut = () => {
       return;
     }
 
-    await stripe.redirectToCheckout({ sessionId: responseData.id });
+    //await stripe.redirectToCheckout({ sessionId: responseData.id });
   } catch (error) {
     AxiosToastError(error);
   }

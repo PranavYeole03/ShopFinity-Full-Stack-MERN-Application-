@@ -33,7 +33,7 @@ const AddToCartButton = ({ data }) => {
       const { data: responseData } = response;
 
       if (responseData.success) {
-        //toast.success(responseData.message);
+        toast.success(responseData.message);
         if (fetchCartItem) {
           fetchCartItem();
         }

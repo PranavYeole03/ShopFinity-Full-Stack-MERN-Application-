@@ -1,90 +1,80 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaArrowLeft } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
-import { FaArrowLeft } from "react-icons/fa";
 import useMobile from "../hooks/useMobile";
 
 const Search = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSearchPage, setIsSearchPage] = useState(false);
   const [isMobile] = useMobile();
-  const params = useLocation()
-  const searchText = params.search.slice(3)
 
+  const isSearchPage = location.pathname === "/search";
 
+  const searchText =
+    new URLSearchParams(location.search).get("q") || "";
+
+  const [query, setQuery] = useState(searchText);
+
+  // 🔹 Debounced navigation (KEY FIX)
   useEffect(() => {
-    const isSearch = location.pathname === "/search";
-    setIsSearchPage(isSearch);
-  }, [location]);
+    if (!query.trim()) return;
+
+    const timer = setTimeout(() => {
+      if (location.search !== `?q=${query}`) {
+        navigate(`/search?q=${query}`);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [query, navigate, location.search]);
 
   const redirectToSearchPage = () => {
     navigate("/search");
   };
 
-  const handleOnChange =(e)=>{
-    const value = e.target.value
-    const url=`/search?q=${value}`
-    navigate(url)
-  }
-
   return (
-    <div className="w-full  min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border overflow-hidden flex items-center text-neutral-500 bg-white group focus-within:border-b-blue-200">
+    <div className="w-full min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border flex items-center text-neutral-500 bg-white focus-within:border-blue-300">
       <div>
         {isMobile && isSearchPage ? (
-          <Link to={"/"} className="flex justify-center items-center h-full p-2 m-1 group-focus-within:border-b-lime-400 bg-white rounded-full shadow-md ">
+          <Link
+            to="/"
+            className="flex items-center h-full p-2 m-1 bg-white rounded-full shadow"
+          >
             <FaArrowLeft size={20} />
           </Link>
         ) : (
-          <button className="flex justify-center items-center h-full p-3 group-focus-within:border-b-white">
+          <div className="flex items-center h-full p-3">
             <FaSearch size={22} />
-          </button>
+          </div>
         )}
       </div>
+
       <div className="w-full h-full">
         {!isSearchPage ? (
           <div
             onClick={redirectToSearchPage}
-            className="w-full h-full flex items-center "
+            className="w-full h-full flex items-center cursor-pointer"
           >
             <TypeAnimation
               sequence={[
-                'Search "Milk"',
-                1000,
-                'Search "Bread"',
-                1000,
-                'Search "Sugar"',
-                1000,
-                'Search "Panner"',
-                1000,
-                'Search "Eggs"',
-                1000,
-                'Search "Bisleri"',
-                1000,
-                'Search "Dahi"',
-                1000,
-                'Search "Washing Powder"',
-                1000,
-                'Search "Mobile"',
-                () => {},
+                'Search "Milk"', 1000,
+                'Search "Bread"', 1000,
+                'Search "Sugar"', 1000,
+                'Search "Mobile"', 1000,
               ]}
-              wrapper="span"
-              cursor={true}
               repeat={Infinity}
             />
           </div>
         ) : (
-          <div className="w-full h-full">
-            <input
-              type="text"
-              placeholder="Search for atta dal and more."
-              autoFocus
-              defaultValue={searchText}
-              className="bg-transparent w-full h-full outline-none"
-              onChange={handleOnChange}
-            />
-          </div>
+          <input
+            type="text"
+            value={query}
+            placeholder="Search for atta, dal and more"
+            className="w-full h-full outline-none bg-transparent"
+            onChange={(e) => setQuery(e.target.value)}
+            autoFocus
+          />
         )}
       </div>
     </div>

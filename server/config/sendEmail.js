@@ -1,29 +1,35 @@
 import { Resend } from "resend";
 import dotenv from "dotenv";
+
 dotenv.config();
 
-if (!process.env.RESEND_API) {
-  console.log("Provide RESEND_API in side the .env file");
+if (!process.env.RESEND_API_KEY) {
+  throw new Error("RESEND_API_KEY is missing in .env file");
 }
 
-const resend = new Resend(process.env.RESEND_API);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async ({ sendTo, subject, html }) => {
+  if (!sendTo || !subject || !html) {
+    throw new Error("sendTo, subject, and html are required");
+  }
+
   try {
     const { data, error } = await resend.emails.send({
       from: "ShopFinity <onboarding@resend.dev>",
       to: sendTo,
-      subject: subject,
-      html: html,
+      subject,
+      html,
     });
 
     if (error) {
-      return console.error({ error });
+      throw error;
     }
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error("Email send failed:", err);
+    throw err;
   }
 };
 

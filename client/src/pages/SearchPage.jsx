@@ -10,32 +10,46 @@ import noDataImg from "../assets/nothing here yet.webp";
 
 const SearchPage = () => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const loadingArrayCard = new Array(15).fill(null);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const params = useLocation();
-  const searchText = params?.search?.slice(3);
+  const [isFetching, setIsFetching] = useState(false);
 
+  const location = useLocation();
+  const searchText =
+    new URLSearchParams(location.search).get("q") || "";
+
+  const loadingArrayCard = new Array(10).fill(null);
+
+  // 🔹 Reset when search text changes
+  useEffect(() => {
+    setPage(1);
+    setData([]);
+  }, [searchText]);
+
+  // 🔹 Fetch data (protected from duplicate calls)
   const fetchData = async () => {
+    if (!searchText || isFetching) return;
+
     try {
+      setIsFetching(true);
       setLoading(true);
+
       const response = await Axios({
         ...SummaryApi.searchProduct,
         data: {
           search: searchText,
-          page: page,
+          page,
         },
       });
-      const { data: responseData } = response;
 
-      if (responseData.success) {
-        if (responseData.page == 1) {
+      const responseData = response?.data;
+
+      if (responseData?.success) {
+        if (page === 1) {
           setData(responseData.data);
         } else {
-          setData((preve) => {
-            return [...preve, ...responseData.data];
-          });
+          setData((prev) => [...prev, ...responseData.data]);
         }
         setTotalPage(responseData.totalPage);
       }
@@ -43,16 +57,18 @@ const SearchPage = () => {
       AxiosToastError(error);
     } finally {
       setLoading(false);
+      setIsFetching(false);
     }
   };
 
+  // 🔹 Call API safely
   useEffect(() => {
     fetchData();
   }, [page, searchText]);
 
   const handleFetchMore = () => {
-    if (totalPage > page) {
-      setPage((preve) => preve + 1);
+    if (page < totalPage && !loading) {
+      setPage((prev) => prev + 1);
     }
   };
 
@@ -62,55 +78,33 @@ const SearchPage = () => {
         <p className="font-semibold text-gray-800 text-lg">
           Search Result: {data.length}
         </p>
+
         <InfiniteScroll
           dataLength={data.length}
-          hasMore={true}
           next={handleFetchMore}
+          hasMore={page < totalPage}
         >
-          <div
-            className="
-            grid
-            grid-cols-2
-            sm:grid-cols-[repeat(2,_minmax(0,_1fr))]
-            md:grid-cols-[repeat(3,_minmax(0,_1fr))]
-            lg:grid-cols-[repeat(5,_minmax(0,_1fr))]
-            py-4
-            gap-4
-          "
-          >
-            {data.map((p, index) => {
-              return (
-                <CardProduct data={p} key={p?._id + "searchProduct" + index} />
-              );
-            })}
-          
-            {/* Loading Skeletons */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 py-4">
+            {data.map((p, index) => (
+              <CardProduct
+                key={p?._id + "search" + index}
+                data={p}
+              />
+            ))}
+
             {loading &&
               loadingArrayCard.map((_, index) => (
-                <CardLoading key={"loadingsearchpage" + index} />
+                <CardLoading key={"loading" + index} />
               ))}
-
-            {/* Data (when loaded) */}
-            {!loading && data.length === 0 && (
-              <p className="col-span-full text-center text-gray-500">
-                No results found.
-              </p>
-            )}
           </div>
         </InfiniteScroll>
-         
-                       {
-                         //no data 
-                         !data[0] && !loading && (
-                           <div className='flex flex-col justify-center items-center w-full mx-auto '>
-                             <img
-                               src={noDataImg} 
-                               className='w-full h-full max-w-xs max-h-xs block'
-                             />
-                             <p className='font-semibold my-2'>No Data found</p>
-                           </div>
-                         )
-                       }
+
+        {!loading && data.length === 0 && (
+          <div className="flex flex-col items-center justify-center">
+            <img src={noDataImg} className="max-w-xs" />
+            <p className="font-semibold mt-2">No Data Found</p>
+          </div>
+        )}
       </div>
     </section>
   );
